@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"meetup8/transaction"
 
 	_ "github.com/lib/pq"
 )
@@ -48,8 +49,13 @@ func main() {
 	if row.Err() != nil {
 		panic(err)
 	}
-
 	fmt.Printf("User: ID=%d, Name=%s, Age=%d\n", id, name, age)
 
 	// Update
+	_, err = db.Exec("UPDATE users SET name = 'John' WHERE id = $1", userId)
+	if err != nil {
+		panic(err)
+	}
+
+	transaction.Transaction(db)
 }
