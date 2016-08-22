@@ -1,9 +1,26 @@
-package transaction
+package main
 
 import (
 	"database/sql"
 	"fmt"
+
+	_ "github.com/lib/pq"
 )
+
+func main() {
+	db, err := sql.Open("postgres", "user=gopq password=123456 dbname=meetup sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Connect success")
+	fmt.Println("---")
+
+	Transaction(db)
+}
 
 func Transaction(db *sql.DB) {
 	tx, err := db.Begin()
@@ -22,7 +39,7 @@ func Transaction(db *sql.DB) {
 	fmt.Println("---")
 
 	// Update
-	_, err = tx.Exec("UPDATE users SET name = 'John' WHERE id = ", userId)
+	_, err = tx.Exec("UPDATE users SET name = 'John' WHERE id = $1", userId)
 	if err != nil {
 		tx.Rollback()
 		panic(err)

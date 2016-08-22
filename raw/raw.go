@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"meetup8/transaction"
 
 	_ "github.com/lib/pq"
 )
@@ -56,6 +55,4 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	transaction.Transaction(db)
 }
